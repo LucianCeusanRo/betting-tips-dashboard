@@ -108,7 +108,7 @@ async def admin_console(request: Request, a: Optional[str] = Query(None), sync: 
                 "error": None if not a else gate.get("message_ro"),
                 "username": "",
             },
-            status_code=200,
+            status_code=401,
         )
         resp.headers["Cache-Control"] = "no-store"
         return resp

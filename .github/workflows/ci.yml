@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test dependencies
+        run: pip install "fastapi>=0.110" "uvicorn>=0.29" "jinja2>=3.1" "python-multipart>=0.0.9" "httpx>=0.27"
+      - name: Tests
+        run: |
+          python tests/test_admin_console.py
+          python tests/test_betano_placer.py
