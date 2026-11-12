@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.env.*
+!.env.example
+# runtime state: cookies, browser profiles, OTP inboxes, queues, logs
+state/
+out/
+live_dashboard/out/
+*.jsonl
+*.log
+*.pid
+storage_state*.json
+*cookies*
+chrome_profile/
+admin_token.txt

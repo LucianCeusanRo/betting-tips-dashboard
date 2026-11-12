@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+
+<html lang="ro">
+
+<head>
+
+<meta charset="utf-8"/>
+
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1"/>
+
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+<meta name="theme-color" content="#070b12"/>
+
+<title>Supreme Admin</title>
+
+<style>
+
+:root{
+
+  --bg:#070b12;--bg2:#0b1220;--card:#111c2b;--card2:#0e1724;
+
+  --line:#223044;--line2:#2a3a52;--txt:#edf4ff;--muted:#8290a4;
+
+  --green:#31e6a1;--green2:#1a9f6e;--cyan:#4bc7ff;--amber:#ffcb70;
+
+  --red:#ff788c;--gold:#f5be3c;--shadow:0 12px 40px rgba(0,0,0,.45);
+
+  --r:22px;--safe-t:env(safe-area-inset-top,0px);--safe-b:env(safe-area-inset-bottom,0px);
+
+  --island-h:36px;--seg-h:52px;--header-extra:52px;--actions-h:52px;--bottom-bar:88px;
+
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+html,body{margin:0;padding:0;background:var(--bg);color:var(--txt);
+
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",system-ui,"Segoe UI",sans-serif;
+
+  -webkit-font-smoothing:antialiased;min-height:100%;}
+
+body{background:
+
+  radial-gradient(ellipse 80% 40% at 50% -10%,#16324a 0%,transparent 55%),
+
+  var(--bg);}
+
+a{color:var(--cyan);text-decoration:none}
+
+.wrap{max-width:430px;margin:0 auto;padding:0 16px calc(var(--bottom-bar) + var(--safe-b) + 16px);
+
+  padding-top:calc(var(--safe-t) + var(--island-h) + var(--header-extra) + var(--seg-h) + var(--actions-h) + 28px);}
+
+
+
+.island{
+
+  position:fixed;left:50%;transform:translateX(-50%);
+
+  top:calc(var(--safe-t) + 8px);z-index:100;
+
+  display:flex;align-items:center;gap:10px;
+
+  min-height:var(--island-h);padding:8px 16px;
+
+  border-radius:999px;border:1px solid #2a4058;
+
+  background:rgba(10,16,26,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+
+  box-shadow:0 8px 28px rgba(0,0,0,.5);cursor:pointer;
+
+  max-width:min(380px,calc(100vw - 28px));
+
+  font-size:12px;font-weight:700;letter-spacing:.02em;
+
+}
+
+.island .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+.island.ok .dot{background:var(--green);box-shadow:0 0 8px var(--green)}
+
+.island.wait .dot{background:var(--amber);box-shadow:0 0 8px var(--amber)}
+
+.island.kill .dot{background:var(--red);box-shadow:0 0 8px var(--red)}
+
+.island.ok{border-color:#1f5a44}
+
+.island.wait{border-color:#5a4a22}
+
+.island.kill{border-color:#5a2230}
+
+.island span{color:var(--muted);font-weight:600}
+
+.island b{color:var(--txt)}
+
+
+
+.top{
+
+  position:fixed;left:0;right:0;z-index:90;
+
+  top:calc(var(--safe-t) + var(--island-h) + 14px);
+
+  background:linear-gradient(180deg,rgba(7,11,18,.98),rgba(7,11,18,.92) 80%,transparent);
+
+  padding:0 16px 8px;
+
+}
+
+.top-inner{max-width:430px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
+
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+
+.logo{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;
+
+  border:1px solid #27785f;background:linear-gradient(145deg,#14352c,#0d1f1a);color:var(--green);
+
+  font-weight:900;font-size:14px;flex-shrink:0}
+
+.brand h1{margin:0;font-size:17px;font-weight:800;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.brand small{display:block;color:var(--muted);font-size:11px;font-weight:600;margin-top:1px}
+
+.top-actions{display:flex;gap:6px;flex-shrink:0}
+
+.icon-btn{min-width:44px;min-height:44px;border-radius:12px;border:1px solid var(--line);
+
+  background:var(--card2);color:var(--txt);font-size:11px;font-weight:800;cursor:pointer;padding:0 10px}
+
+.icon-btn.danger{border-color:#5a2230;color:var(--red)}
+
+.icon-btn.on{background:#2c151c;border-color:#7a3040}
+
+
+
+/* Segment tabs sticky under island/header */
+
+.seg-wrap{
+
+  position:fixed;left:0;right:0;z-index:89;
+
+  top:calc(var(--safe-t) + var(--island-h) + 14px + 52px);
+
+  padding:0 12px 6px;
+
+  background:linear-gradient(180deg,rgba(7,11,18,.96),rgba(7,11,18,.88));
+
+}
+
+.seg{
+
+  max-width:430px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;
+
+  padding:4px;border-radius:16px;background:#0a121c;border:1px solid #1c2a3c;
+
+}
+
+.seg button{
+
+  min-height:44px;border:0;border-radius:12px;background:transparent;color:var(--muted);
+
+  font-size:11px;font-weight:800;cursor:pointer;padding:6px 2px;line-height:1.15;
+
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+
+}
+
+.seg button.active{background:#152436;color:var(--txt);box-shadow:inset 0 0 0 1px #2a4560}
+
+.seg .cnt{display:inline-flex;min-width:18px;height:18px;padding:0 5px;border-radius:999px;
+
+  align-items:center;justify-content:center;font-size:10px;font-weight:900;
+
+  background:#1a2738;color:var(--amber)}
+
+.seg button.active .cnt{background:#1f4a38;color:var(--green)}
+
+.seg button[data-tab="expirate"] .cnt{color:#ffb0b0}
+
+.seg button[data-tab="plasate"] .cnt{color:var(--cyan)}
+
+
+
+.quick{
+
+  position:fixed;left:0;right:0;z-index:88;
+
+  top:calc(var(--safe-t) + var(--island-h) + 14px + 52px + var(--seg-h));
+
+  padding:0 12px 8px;
+
+  background:linear-gradient(180deg,rgba(7,11,18,.94),rgba(7,11,18,.75) 90%,transparent);
+
+}
+
+.quick-inner{max-width:430px;margin:0 auto;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+
+.quick-inner::-webkit-scrollbar{display:none}
+
+.qbtn{flex:0 0 auto;min-height:40px;padding:0 12px;border-radius:12px;border:1px solid var(--line);
+
+  background:var(--card2);color:var(--txt);font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap}
+
+.qbtn.danger{border-color:#5a2230;color:var(--red)}
+
+.qbtn.accent{border-color:#27785f;color:var(--green)}
+
+
+
+.hist{max-width:430px;margin:0 auto 14px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+
+.hist .h{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:10px 6px;text-align:center}
+
+.hist .h b{display:block;font-size:15px;font-weight:800}
+
+.hist .h span{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+
+.banner{max-width:430px;margin:0 auto 12px;padding:12px 14px;border-radius:14px;font-size:13px;font-weight:600}
+
+.banner.kill{background:#2c151c;border:1px solid #5a2230;color:var(--red)}
+
+.banner.warn{background:#2c2211;border:1px solid #604d28;color:var(--amber)}
+
+.banner.info{background:#122030;border:1px solid #2a5070;color:var(--cyan)}
+
+
+
+.section-title{max-width:430px;margin:8px auto 10px;font-size:12px;font-weight:800;color:var(--muted);
+
+  text-transform:uppercase;letter-spacing:.1em;display:flex;align-items:center;justify-content:space-between;gap:8px}
+
+.section-title a.btn-link{min-height:36px;display:inline-flex;align-items:center;padding:0 12px;border-radius:10px;
+
+  border:1px solid #2a5070;background:#122030;color:var(--cyan);font-size:11px;font-weight:800}
+
+
+
+.card{background:linear-gradient(160deg,#121e2e 0%,#0c1522 100%);border:1px solid var(--line);
+
+  border-radius:var(--r);padding:18px;margin:0 0 14px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+
+.card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(var(--green),var(--cyan))}
+
+.card.pending:before{background:linear-gradient(var(--amber),var(--gold))}
+
+.card.confirmed:before,.card.placed_dry:before,.card.placed:before{background:var(--green)}
+
+.card.skipped:before,.card.expired:before{background:#556}
+
+.card.failed:before{background:var(--red)}
+
+.card.done{opacity:.78}
+
+.card.betano{border-color:#2a5070}
+
+.card.betano:before{background:linear-gradient(var(--cyan),#2778c0)}
+
+.card.settled{border-color:#3a4a2a}
+.card.settled.won:before{background:var(--green)}
+.card.settled.lost:before{background:var(--red)}
+.card.settled.void:before{background:#556}
+.badge.won{background:#11241f;color:var(--green);border-color:#27785f}
+.badge.lost{background:#2c151c;color:var(--red);border-color:#5a2230}
+.badge.void{background:#1a1e28;color:var(--muted);border-color:#3a4455}
+.kpis.three{grid-template-columns:1fr 1fr 1fr}
+.kpi b.pos{color:var(--green)}
+.kpi b.neg{color:var(--red)}
+.kpi b.cash{color:var(--cyan)}
+.bal-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;
+  background:#11241f;border:1px solid #27785f;color:var(--green);font-size:12px;font-weight:800}
+.seg button[data-tab="stabilite"] .cnt{color:var(--gold)}
+
+
+.card.hidden-tab{display:none}
+
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+
+.badges{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+
+.badge{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:999px;
+
+  font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;background:#151f2e;color:var(--muted);border:1px solid var(--line)}
+
+.badge.wait{background:#2c2211;color:var(--amber);border-color:#604d28}
+
+.badge.ok{background:#11241f;color:var(--green);border-color:#27785f}
+
+.badge.skip{background:#241818;color:#ff8a8a;border-color:#5a3030}
+
+.badge.dry{background:#122030;color:var(--cyan);border-color:#2a5070}
+.badge.real{background:#0f2a1c;color:#31e6a1;border-color:#27785f;font-weight:800}
+.btn-cashout{margin-top:10px;width:100%;min-height:44px;border:0;border-radius:12px;background:#1a3048;color:#9fd6ff;font-weight:800;cursor:pointer}
+.btn-cashout:active{opacity:.85}
+
+.badge.fail{background:#2c151c;color:var(--red);border-color:#5a2230}
+
+.badge.multi{background:#1a1830;color:#c4b5fd;border-color:#3d3560}
+
+.badge.upset-high{background:#2c151c;color:var(--red);border-color:#5a2230}
+
+.badge.upset-med{background:#2c2211;color:var(--amber);border-color:#604d28}
+
+.badge.verdict-ok{background:#11241f;color:var(--green);border-color:#27785f}
+
+.badge.verdict-no{background:#2c151c;color:var(--red);border-color:#5a2230}
+
+.badge.live{background:#1a2030;color:var(--cyan);border-color:#2a5070}
+
+.card h2{margin:0 0 4px;font-size:18px;font-weight:800;letter-spacing:-.02em;line-height:1.25}
+
+.meta{color:var(--muted);font-size:12px;line-height:1.45;font-weight:500}
+
+.pick{margin:14px 0;padding:14px;border-radius:16px;background:#09111b;border:1px solid #25364c}
+
+.pick .lab{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+
+.pick .sel{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:6px}
+
+.pick .sel strong{font-size:20px;font-weight:800;letter-spacing:-.02em}
+
+.pick .odd{font-size:26px;font-weight:900;color:var(--green)}
+
+
+
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+
+.kpi{background:#0b131e;border:1px solid #1d2a3b;border-radius:14px;padding:12px;text-align:center}
+
+.kpi b{display:block;font-size:16px;font-weight:800;color:var(--gold)}
+
+.kpi span{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+
+.kpi .live{color:var(--green)}
+
+
+
+.field{margin:12px 0}
+
+.field label{display:block;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+
+.chip{min-height:44px;padding:0 14px;border-radius:12px;border:1px solid var(--line2);
+
+  background:#121e2d;color:var(--txt);font-size:14px;font-weight:800;cursor:pointer}
+
+.chip.active{background:#11241f;border-color:var(--green);color:var(--green);box-shadow:0 0 0 1px rgba(49,230,161,.25)}
+
+.chip.rec{border-color:#5a4a22;color:var(--amber)}
+
+.stake-row{display:flex;gap:8px;align-items:center}
+
+.stake-row input{flex:1;min-height:48px;border-radius:14px;border:1px solid var(--line2);
+
+  background:#09111b;color:var(--txt);font-size:20px;font-weight:800;padding:0 14px;outline:none}
+
+.stake-row input:focus{border-color:var(--green)}
+
+.stake-row .unit{color:var(--muted);font-weight:700;font-size:13px}
+
+
+
+.dest{display:grid;gap:8px}
+
+.dest label{display:flex;align-items:center;gap:12px;min-height:48px;padding:0 14px;border-radius:14px;
+
+  border:1px solid var(--line);background:#0b131e;font-size:14px;font-weight:700;cursor:pointer;text-transform:none;letter-spacing:0;color:var(--txt)}
+
+.dest label input{width:20px;height:20px;accent-color:var(--green)}
+
+.dest .hint{font-size:11px;color:var(--muted);font-weight:600;margin:0;text-transform:none;letter-spacing:0}
+
+
+
+.book-pref{display:flex;gap:8px}
+
+.book-pref button{flex:1;min-height:44px;border-radius:12px;border:1px solid var(--line);background:#121e2d;color:var(--muted);font-weight:800;cursor:pointer}
+
+.book-pref button.active{border-color:var(--green);color:var(--green);background:#11241f}
+
+
+
+.note{width:100%;min-height:52px;border-radius:14px;border:1px solid var(--line);background:#09111b;color:var(--txt);
+
+  font-size:14px;padding:12px 14px;resize:vertical;outline:none;font-family:inherit}
+
+.note:focus{border-color:var(--cyan)}
+
+
+
+.analysis{margin-top:12px;border-radius:14px;border:1px solid #1d2a3b;background:#0b131e;overflow:hidden}
+
+.analysis summary{list-style:none;cursor:pointer;padding:12px 14px;font-size:13px;font-weight:800;display:flex;justify-content:space-between;align-items:center;min-height:44px}
+
+.analysis summary::-webkit-details-marker{display:none}
+
+.analysis .body{padding:0 14px 14px;font-size:13px;line-height:1.5;color:#c5d0e0}
+
+.reasons{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+
+.reasons span{background:#151f2e;color:var(--muted);font-size:11px;padding:4px 8px;border-radius:8px;font-weight:600}
+
+.legs{margin-top:10px;display:grid;gap:8px}
+
+.leg{padding:10px 12px;border-radius:12px;background:#09111b;border:1px solid #1d2a3b;font-size:12px}
+
+.leg b{font-size:13px}
+
+.verdict-box{margin:12px 0;padding:12px 14px;border-radius:14px;font-size:13px;font-weight:600;line-height:1.4}
+
+.verdict-box.ok{background:#11241f;border:1px solid #27785f;color:var(--green)}
+
+.verdict-box.no{background:#2c151c;border:1px solid #5a2230;color:var(--red)}
+
+.recheck{margin-top:8px;font-size:12px;color:var(--amber);font-weight:600}
+
+.recheck.bad{color:var(--red)}
+
+
+
+.empty{text-align:center;padding:48px 24px;border-radius:var(--r);border:1px dashed var(--line);background:var(--card2);margin:20px 0}
+
+.empty .ico{font-size:36px;margin-bottom:12px}
+
+.empty h3{margin:0 0 6px;font-size:18px;font-weight:800}
+
+.empty p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
+
+.err{text-align:center;padding:60px 20px}
+
+.err h1{font-size:22px}
+
+.foot{text-align:center;color:#5e6c80;font-size:11px;margin:20px 0 8px;line-height:1.4}
+
+.tab-empty{display:none}
+
+.tab-empty.show{display:block}
+
+
+
+.bottombar{
+
+  position:fixed;left:0;right:0;bottom:0;z-index:95;
+
+  padding:10px 16px calc(10px + var(--safe-b));
+
+  background:linear-gradient(0deg,rgba(7,11,18,.98) 60%,rgba(7,11,18,.7));
+
+  border-top:1px solid #1a2738;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+
+  display:none;
+
+}
+
+.bottombar.show{display:block}
+
+.bb-inner{max-width:430px;margin:0 auto;display:grid;grid-template-columns:0.7fr 1.1fr 1.1fr;gap:8px}
+
+.bb-inner button{min-height:52px;border:0;border-radius:16px;font-size:14px;font-weight:800;cursor:pointer;line-height:1.15;padding:8px 6px}
+
+.btn-skip{background:#241818;color:#ffb0b0;border:1px solid #5a3030!important}
+
+.btn-ok,.btn-place{background:linear-gradient(180deg,#3ef0b0,#1a9f6e);color:#06120e;box-shadow:0 8px 24px rgba(49,230,161,.25)}
+
+.btn-send{background:linear-gradient(180deg,#5ab0ff,#2a6fd4);color:#061018;box-shadow:0 8px 24px rgba(74,160,255,.28)}
+
+.btn-ok:disabled,.btn-skip:disabled,.btn-place:disabled,.btn-send:disabled{opacity:.45;cursor:not-allowed}
+
+.bb-meta{max-width:430px;margin:0 auto 6px;font-size:11px;color:var(--muted);font-weight:600;text-align:center}
+
+.card-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.card-actions button{min-height:48px;border:0;border-radius:14px;font-size:14px;font-weight:800;cursor:pointer}
+.share-box{margin-top:10px;padding:10px 12px;border-radius:12px;border:1px solid #2a3d58;background:#0e1624;display:none}
+.share-box.show{display:block}
+.share-box label{display:block;font-size:11px;color:var(--muted);font-weight:700;margin-bottom:6px}
+.share-box .share-row{display:flex;gap:8px;align-items:center}
+.share-box input{flex:1;min-height:40px;border-radius:10px;border:1px solid #2a3d58;background:#0a1018;color:#e8f0ff;padding:0 10px;font-size:12px}
+.share-box button{min-height:40px;padding:0 12px;border:0;border-radius:10px;background:#1a3048;color:#9fd6ff;font-weight:800;cursor:pointer;white-space:nowrap}
+
+</style>
+
+</head>
+
+<body>
+
+{% if error %}
+
+<div class="wrap err">
+
+  <h1>{{ error }}</h1>
+
+  <p class="meta">Deschide cu <code>/admin?a=TOKEN</code><br/>Token: <code>live_dashboard/out/admin_token.txt</code></p>
+
+</div>
+
+{% else %}
+
+
+
+<div id="island" class="island {% if halted %}kill{% elif pending_count %}wait{% else %}ok{% endif %}" onclick="jumpPending()" role="button" aria-label="Island status">
+
+  <i class="dot"></i>
+
+  {% if halted %}
+
+    <b>KILL</b> <span>·</span> <span>oprit azi</span>
+
+  {% else %}
+
+    <b>{{ pending_count }}</b> <span>pending</span>
+
+    <span>·</span>
+
+    <span>Bal</span> <b id="betanoBal">{% if betano_balance_lei is not none %}{{ '%.2f'|format(betano_balance_lei|float) }}{% else %}—{% endif %}</b><span> lei</span>
+    <span>·</span>
+
+    <span>P&amp;L</span> <b>{{ history.pnl_lei if history and history.pnl_lei is not none else 0 }}</b><span> lei</span>
+
+  {% endif %}
+
+</div>
+
+
+
+<header class="top">
+
+  <div class="top-inner">
+
+    <div class="brand">
+
+      <div class="logo">SP</div>
+
+      <div>
+
+        <h1>Supreme Admin</h1>
+
+        <small>Bank ref · {{ bank_lei|int }} lei{% if betano_balance_lei is not none %} · <span style="color:var(--green)">Betano {{ '%.2f'|format(betano_balance_lei|float) }} lei</span>{% endif %}{% if halted %} · KILL{% endif %}</small>
+
+      </div>
+
+    </div>
+
+    <div class="top-actions">
+
+      <button type="button" class="icon-btn" onclick="refreshNow()">Refresh</button>
+
+      <button type="button" class="icon-btn {% if halted %}on{% else %}danger{% endif %}" id="haltBtn" onclick="toggleHalt()">{{ 'ON' if halted else 'Kill' }}</button>
+
+    </div>
+
+  </div>
+
+</header>
+
+
+
+<nav class="seg-wrap" aria-label="Secțiuni bilete">
+
+  <div class="seg" id="segTabs">
+
+    <button type="button" data-tab="va_urma" class="active" onclick="setTab('va_urma')">Va urma<span class="cnt" id="cnt-va_urma">{{ tab_counts.va_urma if tab_counts else 0 }}</span></button>
+
+    <button type="button" data-tab="in_desfasurare" onclick="setTab('in_desfasurare')">În desfășurare<span class="cnt" id="cnt-in_desfasurare">{{ tab_counts.in_desfasurare if tab_counts else 0 }}</span></button>
+
+    <button type="button" data-tab="plasate" onclick="setTab('plasate')">Plasate<span class="cnt" id="cnt-plasate">{{ tab_counts.plasate if tab_counts else 0 }}</span></button>
+
+    <button type="button" data-tab="stabilite" onclick="setTab('stabilite')">Stabilite<span class="cnt" id="cnt-stabilite">{{ (betano_settled.count if betano_settled and betano_settled.count else 0) or (betano_settled.settled_count if betano_settled and betano_settled.settled_count else 0) or (tab_counts.stabilite if tab_counts else 0) }}</span></button>
+
+    <button type="button" data-tab="expirate" onclick="setTab('expirate')">Expirate<span class="cnt" id="cnt-expirate">{{ tab_counts.expirate if tab_counts else 0 }}</span></button>
+
+  </div>
+
+</nav>
+
+
+
+<div class="quick">
+
+  <div class="quick-inner">
+
+    <button type="button" class="qbtn accent" onclick="refreshNow()">↻ Refresh</button>
+
+    <button type="button" class="qbtn" onclick="jumpPending()">↓ Primul pending</button>
+
+    <button type="button" class="qbtn" onclick="skipAllExpired()">Skip expirate</button>
+
+    <button type="button" class="qbtn" onclick="clearFilters()">Clear filtre</button>
+
+    <button type="button" class="qbtn danger" onclick="toggleHalt()">Kill switch</button>
+
+    <a class="qbtn" style="display:inline-flex;align-items:center" href="{{ betano_open_url or 'https://ro.betano.com/myaccount/bethistory/open' }}" target="_blank" rel="noopener">Betano open</a>
+
+    <a class="qbtn" style="display:inline-flex;align-items:center" href="{{ betano_settled_url or 'https://ro.betano.com/myaccount/bethistory/' }}" target="_blank" rel="noopener">Stabilite</a>
+
+  </div>
+
+</div>
+
+
+
+<div class="wrap">
+
+  <div class="hist">
+
+    <div class="h"><b>{{ history.pending if history else pending_count }}</b><span>Pending</span></div>
+
+    <div class="h"><b>{{ history.won if history else 0 }}/{{ history.lost if history else 0 }}</b><span>W/L</span></div>
+
+    <div class="h"><b>{% if betano_balance_lei is not none %}{{ '%.2f'|format(betano_balance_lei|float) }}{% else %}—{% endif %}</b><span>Bal Betano</span></div>
+
+    <div class="h"><b>{{ history.pnl_lei if history and history.pnl_lei is not none else 0 }}</b><span>P&amp;L</span></div>
+
+  </div>
+
+
+
+  {% if halted %}
+
+  <div class="banner kill">Kill switch activ — fără aprobări / trimiteri azi. {{ halt.reason or '' }}</div>
+
+  {% endif %}
+
+
+
+  <!-- Plasate: Betano open bets section (always in DOM; shown on plasate tab) -->
+
+  <div id="betanoSection" class="hidden-tab" data-show-tab="plasate">
+
+    <div class="section-title">
+
+      <span>Deschise pe Betano{% if betano_open %} · {{ betano_open.count or 0 }}{% if betano_open.open_count and betano_open.open_count > (betano_open.count or 0) %}/{{ betano_open.open_count }}{% endif %}{% endif %}</span>
+
+      <a class="btn-link" href="{{ betano_open.url if betano_open and betano_open.url else (betano_open_url or 'https://ro.betano.com/myaccount/bethistory/open') }}" target="_blank" rel="noopener">Deschide pe Betano</a>
+
+    </div>
+
+    {% if betano_open and betano_open.bets and (betano_open.bets|length) %}
+
+      {% for b in betano_open.bets %}
+
+      <article class="card betano">
+
+        <div class="badges">
+
+          <span class="badge live">Betano open</span>
+
+          <span class="badge ok">{{ b.status or 'open' }}</span>
+
+        </div>
+
+        <h2>{{ b.match or '—' }}</h2>
+
+        <div class="meta">{% if b.start %}{{ b.start }} · {% endif %}{{ b.raw_note or '' }}</div>
+
+        <div class="pick">
+
+          <div class="lab">Selectie</div>
+
+          <div class="sel">
+
+            <strong>{{ b.selection or '—' }}</strong>
+
+            <span class="odd">@ {{ b.odds if b.odds is not none else '—' }}</span>
+
+          </div>
+
+        </div>
+
+        <div class="kpis three">
+
+          <div class="kpi"><b>{{ b.stake_lei if b.stake_lei is not none else '—' }}</b><span>Miza</span></div>
+
+          <div class="kpi"><b>{{ b.potential_return_lei if b.potential_return_lei is not none else '—' }}</b><span>Retur</span></div>
+
+          <div class="kpi"><b class="cash">{% if b.cashout_lei is not none %}{{ b.cashout_lei }}{% else %}—{% endif %}</b><span>Cashout</span></div>
+
+        </div>
+
+      
+        <button type="button" class="btn-cashout" onclick="actCashoutOpen({{ b.stake_lei if b.stake_lei is not none else 'null' }}, '{{ b.id or '' }}')">Cashout acest bilet</button>
+      </article>
+
+      {% endfor %}
+
+    {% else %}
+
+      <div class="banner info">
+
+        {% if betano_open and betano_open.message_ro %}{{ betano_open.message_ro }}{% else %}Niciun export local încă.{% endif %}
+
+        Sync: <code>out/betano_open.json</code>.
+
+        <div style="margin-top:10px">
+
+          <a class="btn-link" href="{{ betano_open_url or 'https://ro.betano.com/myaccount/bethistory/open' }}" target="_blank" rel="noopener">Deschide pe Betano</a>
+
+        </div>
+
+      </div>
+
+    {% endif %}
+
+    <div class="section-title"><span>Locale (aprobat / dry-run)</span></div>
+
+  </div>
+
+
+
+  <!-- Stabilite: Betano settled bets -->
+
+  <div id="betanoSettledSection" class="hidden-tab" data-show-tab="stabilite">
+
+    <div class="section-title">
+
+      <span>Stabilite pe Betano{% if betano_settled %} · {{ (betano_settled.count or 0) or (betano_settled.settled_count or 0) }}{% if betano_settled.won or betano_settled.lost %} · W{{ betano_settled.won or 0 }}/L{{ betano_settled.lost or 0 }}{% endif %}{% endif %}</span>
+
+      <a class="btn-link" href="{{ betano_settled.url if betano_settled and betano_settled.url else (betano_settled_url or 'https://ro.betano.com/myaccount/bethistory/') }}" target="_blank" rel="noopener">Istoric Betano</a>
+
+    </div>
+
+    {% if betano_settled and betano_settled.bets and (betano_settled.bets|length) %}
+
+      {% for b in betano_settled.bets %}
+
+      <article class="card settled {{ b.result or 'settled' }}">
+
+        <div class="badges">
+
+          <span class="badge {{ b.result or 'ok' }}">{{ b.result_label_ro or b.result or 'Settled' }}</span>
+
+          <span class="badge dry">Betano</span>
+
+          {% if b.type %}<span class="badge">{{ b.type }}</span>{% endif %}
+
+        </div>
+
+        <h2>{{ b.match or '—' }}</h2>
+
+        <div class="meta">{% if b.settled_at %}{{ b.settled_at }} · {% elif b.start %}{{ b.start }} · {% endif %}{{ b.market or b.raw_note or '' }}</div>
+
+        <div class="pick">
+
+          <div class="lab">Selectie</div>
+
+          <div class="sel">
+
+            <strong>{{ b.selection or '—' }}</strong>
+
+            <span class="odd">@ {{ b.odds if b.odds is not none else '—' }}</span>
+
+          </div>
+
+        </div>
+
+        <div class="kpis three">
+
+          <div class="kpi"><b>{{ b.stake_lei if b.stake_lei is not none else '—' }}</b><span>Miza</span></div>
+
+          <div class="kpi"><b>{{ b.return_lei if b.return_lei is not none else '—' }}</b><span>Retur</span></div>
+
+          <div class="kpi"><b class="{% if b.pnl_lei is not none and b.pnl_lei > 0 %}pos{% elif b.pnl_lei is not none and b.pnl_lei < 0 %}neg{% endif %}">{% if b.pnl_lei is not none %}{{ b.pnl_lei }}{% else %}—{% endif %}</b><span>P&amp;L</span></div>
+
+        </div>
+
+      </article>
+
+      {% endfor %}
+
+    {% else %}
+
+      <div class="banner info">
+
+        {% if betano_settled and betano_settled.message_ro %}{{ betano_settled.message_ro }}{% else %}Niciun export Stabilite încă.{% endif %}
+
+        Sync: <code>out/betano_settled.json</code>.
+
+        {% if betano_settled and betano_settled.note %}<div class="meta" style="margin-top:8px">{{ betano_settled.note }}</div>{% endif %}
+
+        <div style="margin-top:10px">
+
+          <a class="btn-link" href="{{ betano_settled_url or 'https://ro.betano.com/myaccount/bethistory/' }}" target="_blank" rel="noopener">Deschide istoricul Betano</a>
+
+        </div>
+
+      </div>
+
+    {% endif %}
+
+  </div>
+
+
+
+  <div id="tabEmpty" class="empty tab-empty">
+
+    <div class="ico">🎫</div>
+
+    <h3 id="tabEmptyTitle">Niciun bilet</h3>
+
+    <p id="tabEmptyBody">Schimbă tab-ul sau dă Refresh / Sync.</p>
+
+  </div>
+
+
+
+  {% if not tickets and not (betano_open and betano_open.bets) %}
+
+  <div class="empty" id="globalEmpty">
+
+    <div class="ico">🎫</div>
+
+    <h3>Niciun bilet</h3>
+
+    <p>Coada e goală. Rulează tip gate / Sync sau așteaptă ponturi.</p>
+
+  </div>
+
+  {% endif %}
+
+
+
+  {% for t in tickets %}
+
+  <article class="card {{ t.status }} {% if t.status != 'pending' %}done{% endif %}" id="t-{{ t.tip_id }}"
+
+    data-tip="{{ t.tip_id }}"
+
+    data-odds="{{ t.odds if t.odds is not none else '' }}"
+
+    data-stake="{{ t.stake_lei if t.stake_lei is not none else t.recommended_stake_lei or 2 }}"
+
+    data-rec="{{ t.recommended_stake_lei if t.recommended_stake_lei is not none else 2 }}"
+
+    data-status="{{ t.status }}"
+
+    data-tab="{{ t.tab or 'va_urma' }}"
+
+    data-book="{{ t.book_pref or 'betano' }}">
+
+    <div class="badges">
+
+      <span class="badge">{{ t.sport or 'CS2' }}</span>
+
+      {% if t.ticket_type == 'multi' %}<span class="badge multi">Multi {{ (t.legs|length) if t.legs else '2–3' }}</span>
+
+      {% else %}<span class="badge">Single</span>{% endif %}
+
+      {% if t.status == 'pending' %}<span class="badge wait">In asteptare</span>
+
+      {% elif t.status == 'confirmed' %}<span class="badge ok">Aprobat</span>
+      {% if t.real_place_pending or t.betano_job_id %}<span class="badge real">Place job{% if t.stake_lei is not none %} · {{ t.stake_lei }} lei{% endif %}</span>{% endif %}
+
+      {% elif t.status == 'placed_dry' %}<span class="badge dry">Plasat (dry)</span>
+
+      {% elif t.status == 'placed' %}<span class="badge ok">Plasat</span>
+      {% if t.real_place or t.betano_job_id or t.betano_ticket_id %}<span class="badge real">Betano REAL{% if t.stake_lei is not none %} · {{ t.stake_lei }} lei{% endif %}</span>{% endif %}
+
+      {% elif t.status == 'skipped' %}<span class="badge skip">Skip</span>
+
+      {% elif t.status == 'failed' %}<span class="badge fail">Esuat</span>
+
+      {% elif t.status == 'expired' %}<span class="badge skip">Expirat</span>
+
+      {% else %}<span class="badge">{{ t.status_label_ro or t.status }}</span>{% endif %}
+
+      {% if t.upset and t.upset.level == 'high' %}<span class="badge upset-high">Upset ridicat</span>
+
+      {% elif t.upset and t.upset.level == 'med' %}<span class="badge upset-med">Upset mediu</span>{% endif %}
+
+      {% if t.ticket_type == 'multi' and t.verdict_ok %}<span class="badge verdict-ok">OK</span>
+
+      {% elif t.ticket_type == 'multi' and t.verdict_ok is sameas false %}<span class="badge verdict-no">NU e OK</span>{% endif %}
+
+    </div>
+
+
+
+    <h2>{{ t.match or '—' }}</h2>
+
+    <div class="meta">{{ t.league or '' }}{% if t.league %} · {% endif %}{{ t.market or '' }}{% if t.start %} · {{ t.start }}{% endif %}</div>
+
+
+
+    <div class="pick">
+
+      <div class="lab">Selectie</div>
+
+      <div class="sel">
+
+        <strong>{{ t.selection or '—' }}</strong>
+
+        <span class="odd">@ {{ t.odds if t.odds is not none else '—' }}</span>
+
+      </div>
+
+      <div class="meta" style="margin-top:8px">
+
+        {{ t.book or t.book_pref or '—' }}
+
+        {% if t.book_url %} · <a href="{{ t.book_url }}" target="_blank" rel="noopener">link casa</a>{% endif %}
+
+      </div>
+
+    </div>
+
+
+
+    {% if t.ticket_type == 'multi' and t.legs %}
+
+    <div class="legs">
+
+      {% for lg in t.legs %}
+
+      <div class="leg">
+
+        <b>L{{ lg.idx }} · {{ lg.selection }} @ {{ lg.odds }}</b>
+
+        <div class="meta">{{ lg.match }} · {{ lg.market }}
+
+          {% if lg.upset %}<br/>Upset {{ lg.upset.level }} · {{ lg.upset.note_ro }}{% endif %}
+
+        </div>
+
+      </div>
+
+      {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+
+
+    {% if t.ticket_type == 'multi' and t.multi_why %}
+
+    <div class="verdict-box {{ 'ok' if t.verdict_ok else 'no' }}">
+
+      <b>{{ t.verdict or ('OK' if t.verdict_ok else 'NU e OK') }}</b>
+
+      {% if t.recomandat %} · Recomandat{% endif %}<br/>{{ t.multi_why }}
+
+    </div>
+
+    {% elif t.upset and t.upset.yellow_flag %}
+
+    <div class="verdict-box no" style="border-color:#604d28;background:#2c2211;color:var(--amber)">
+
+      Steag galben: {{ t.upset.note_ro }}
+
+    </div>
+
+    {% endif %}
+
+
+
+    {% if t.status == 'pending' %}
+
+    <div class="field">
+
+      <label>Miza (lei)</label>
+
+      <div class="chips" style="margin-bottom:8px">
+
+        <button type="button" class="chip" data-stake-chip="2" onclick="setStake(this,2)">2</button>
+
+        <button type="button" class="chip" data-stake-chip="5" onclick="setStake(this,5)">5</button>
+
+        <button type="button" class="chip" data-stake-chip="10" onclick="setStake(this,10)">10</button>
+
+        <button type="button" class="chip" data-stake-chip="20" onclick="setStake(this,20)">20</button>
+
+        <button type="button" class="chip rec" data-stake-chip="rec" onclick="setStake(this,'rec')">Rec.</button>
+
+      </div>
+
+      <div class="stake-row">
+
+        <input type="number" inputmode="decimal" step="0.5" min="0.5" class="stake-in" value="{{ t.stake_lei if t.stake_lei is not none else 2 }}" oninput="recalc(this)"/>
+
+        <span class="unit">lei</span>
+
+      </div>
+
+    </div>
+
+
+
+    <div class="kpis">
+
+      <div class="kpi"><b class="live ret">—</b><span>Retur</span></div>
+
+      <div class="kpi"><b class="live prof">—</b><span>Profit</span></div>
+
+      <div class="kpi"><b class="live pct">—</b><span>% bank</span></div>
+
+      <div class="kpi"><b>{% if t.edge_pct is not none %}+{{ t.edge_pct }}%{% else %}—{% endif %}</b><span>Edge</span></div>
+
+    </div>
+
+
+
+    <div class="field">
+
+      <label>Casa</label>
+
+      <div class="book-pref">
+
+        <button type="button" class="book-btn {% if (t.book_pref or 'betano') == 'superbet' %}active{% endif %}" data-book="superbet" onclick="setBook(this,'superbet')">Superbet</button>
+
+        <button type="button" class="book-btn {% if (t.book_pref or 'betano') == 'betano' %}active{% endif %}" data-book="betano" onclick="setBook(this,'betano')">Betano</button>
+
+      </div>
+
+    </div>
+
+
+
+    <div class="field">
+
+      <label>Destinatii</label>
+
+      <p class="hint dest" style="margin:0 0 8px;font-size:11px;color:var(--muted);font-weight:600">Plasează bilet = doar tu. Trimite pe grup = canalele bifate (default WA dacă nimic). Canalele stau OFF.</p>
+
+      <div class="dest">
+
+        <label><input type="checkbox" class="dest-wa" /> WhatsApp grup</label>
+
+        <label><input type="checkbox" class="dest-dc" /> Discord</label>
+
+        <label><input type="checkbox" class="dest-tg" /> Telegram</label>
+
+      </div>
+
+    </div>
+
+
+
+    <div class="field">
+
+      <label>Nota personala</label>
+
+      <textarea class="note" placeholder="Ex: doar personal, miza mica…" maxlength="500"></textarea>
+
+    </div>
+
+
+
+    <div class="recheck" data-recheck>Re-check cota la aprobare…</div>
+
+    <div class="card-actions">
+      <button type="button" class="btn-send" onclick="actSendGroup(this.closest('article'))" {% if halted %}disabled{% endif %}>Trimite pe grup</button>
+      <button type="button" class="btn-place" onclick="actPlace(this.closest('article'))" {% if halted %}disabled{% endif %}>Plasează bilet</button>
+    </div>
+    <div class="share-box" data-share>
+      <label>Link public (copiază pentru oameni)</label>
+      <div class="share-row">
+        <input type="text" readonly data-share-url value="" onclick="this.select()"/>
+        <button type="button" onclick="copyShare(this)">Copiază</button>
+      </div>
+    </div>
+
+
+    {% else %}
+
+    <div class="kpis">
+
+      <div class="kpi"><b>{{ t.stake_lei if t.stake_lei is not none else '—' }} lei</b><span>Miza</span></div>
+
+      <div class="kpi"><b>{{ t.potential_return_lei if t.potential_return_lei is not none else '—' }}</b><span>Retur</span></div>
+
+      <div class="kpi"><b>{{ t.potential_profit_lei if t.potential_profit_lei is not none else '—' }}</b><span>Profit</span></div>
+
+      <div class="kpi"><b>{% if t.edge_pct is not none %}+{{ t.edge_pct }}%{% else %}—{% endif %}</b><span>Edge</span></div>
+
+    </div>
+
+    {% if t.fail_reason %}<p class="meta" style="color:var(--red)">{{ t.fail_reason }}</p>{% endif %}
+    {% if t.status in ('placed', 'confirmed', 'placed_dry') and (t.real_place or t.betano_job_id or t.stake_marker or t.betano_ticket_id) %}
+    <button type="button" class="btn-cashout" onclick="actCashout('{{ t.tip_id }}', {{ t.stake_marker if t.stake_marker is not none else t.stake_lei if t.stake_lei is not none else 'null' }}, '{{ t.betano_ticket_id or '' }}')">Cashout Betano{% if t.stake_marker is not none or t.stake_lei is not none %} (marker {{ t.stake_marker if t.stake_marker is not none else t.stake_lei }}){% endif %}</button>
+    {% endif %}
+
+    {% if t.personal_note %}<p class="meta">Nota: {{ t.personal_note }}</p>{% endif %}
+
+    {% endif %}
+
+
+
+    <details class="analysis" {% if t.status == 'pending' %}open{% endif %}>
+
+      <summary>Analiza <span style="color:var(--muted);font-weight:600">detalii</span></summary>
+
+      <div class="body">
+
+        {% if t.why %}{{ t.why }}{% else %}<span class="meta">Fara why text.</span>{% endif %}
+
+        {% if t.upset %}<p style="margin:10px 0 0;color:var(--amber)">{{ t.upset.note_ro }}</p>{% endif %}
+
+        {% if t.multi_sim %}
+
+        <p style="margin:10px 0 0">Joint eff {{ t.multi_sim.joint_prob }} · EV {{ t.multi_sim.ev_pct }}% · hit-sim {{ t.multi_sim.hit_rate_sim }}%</p>
+
+        {% endif %}
+
+        {% if t.reasons %}
+
+        <div class="reasons">{% for r in t.reasons %}<span>{{ r }}</span>{% endfor %}</div>
+
+        {% endif %}
+
+        {% if t.tip_id %}<p style="margin:10px 0 0"><a href="/tip/{{ t.tip_id }}" target="_blank" rel="noopener">Deschide tip detail</a></p>{% endif %}
+
+      </div>
+
+    </details>
+
+  </article>
+
+  {% endfor %}
+
+
+
+  <p class="foot">Confirm → place_queue; cu REAL_BETANO_PLACE=1 → betano_jobs.jsonl (box worker). Cashout din Plasate.<br/>Open bets: <code>out/betano_open.json</code> · OTP: <a href="/admin/otp">/admin/otp</a></p>
+
+</div>
+
+
+
+<div class="bottombar" id="bottombar">
+
+  <div class="bb-meta" id="bbMeta">Selectează un bilet pending</div>
+
+  <div class="bb-inner">
+
+    <button type="button" class="btn-skip" id="btnSkip" onclick="actSkip()">Skip</button>
+
+    <button type="button" class="btn-send" id="btnSend" onclick="actSendGroup()" {% if halted %}disabled{% endif %}>Trimite pe grup</button>
+
+    <button type="button" class="btn-place" id="btnPlace" onclick="actPlace()" {% if halted %}disabled{% endif %}>Plasează bilet</button>
+
+  </div>
+
+</div>
+
+
+
+<script>
+
+const BANK = {{ bank_lei|default(100) }};
+
+const TAB_COUNTS = {{ (tab_counts or {})|tojson }};
+
+let activeTip = null;
+
+let currentTab = localStorage.getItem('sp_admin_tab') || '{{ default_tab or "va_urma" }}';
+
+
+
+const TAB_EMPTY = {
+
+  va_urma: ['Nimic pe va urma', 'Nu există bilete pending cu start în viitor.'],
+
+  in_desfasurare: ['Nimic în desfășurare', 'Niciun bilet live / aprobat după start. Vezi Plasate sau Betano open.'],
+
+  plasate: ['Nicio plasare locală', 'Aici apar aprobat / placed_dry. Open bets Betano sunt mai sus (sau Deschide pe Betano).'],
+
+  stabilite: ['Nicio stabilire locală', 'Biletele W/L din out/betano_settled.json apar aici după sync scrape.'],
+
+  expirate: ['Nicio expirare', 'Biletele expirate / skip / eșuate apar aici.']
+
+};
+
+
+
+function cards(){ return [...document.querySelectorAll('.card[data-status="pending"]')]; }
+
+function allTicketCards(){ return [...document.querySelectorAll('article.card[data-tab]')]; }
+
+
+
+function setTab(tab){
+
+  currentTab = tab;
+
+  try{ localStorage.setItem('sp_admin_tab', tab); }catch(e){}
+
+  document.querySelectorAll('#segTabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+
+  const betano = document.getElementById('betanoSection');
+
+  const settled = document.getElementById('betanoSettledSection');
+
+  if(betano) betano.classList.toggle('hidden-tab', tab !== 'plasate');
+
+  if(settled) settled.classList.toggle('hidden-tab', tab !== 'stabilite');
+
+  let visible = 0;
+
+  allTicketCards().forEach(c => {
+
+    const show = c.dataset.tab === tab;
+
+    c.classList.toggle('hidden-tab', !show);
+
+    if(show) visible++;
+
+  });
+
+  const empty = document.getElementById('tabEmpty');
+
+  const ge = document.getElementById('globalEmpty');
+
+  if(ge) ge.style.display = 'none';
+
+  const hasBetano = tab === 'plasate' && betano && !betano.querySelector('.banner.info');
+
+  const hasSettled = tab === 'stabilite' && settled && settled.querySelector('article.card');
+
+  // For plasate/stabilite, Betano sections stay; hide generic empty when section has content or stub banner
+  if(empty){
+
+    const te = TAB_EMPTY[tab] || TAB_EMPTY.va_urma;
+
+    document.getElementById('tabEmptyTitle').textContent = te[0];
+
+    document.getElementById('tabEmptyBody').textContent = te[1];
+
+    const suppress = (tab === 'plasate') || (tab === 'stabilite');
+
+    empty.classList.toggle('show', visible === 0 && !suppress);
+
+  }
+
+  // bottom bar only useful on va_urma / pending
+
+  const bar = document.getElementById('bottombar');
+
+  if(tab === 'va_urma' && cards().some(c => !c.classList.contains('hidden-tab'))){
+
+    bar.classList.add('show');
+
+  } else if(tab !== 'va_urma'){
+
+    bar.classList.remove('show');
+
+  }
+
+}
+
+
+
+function refreshNow(){ location.href = '/admin/tickets?sync=1'; }
+
+function clearFilters(){ setTab('va_urma'); jumpPending(); }
+
+
+
+function jumpPending(){
+
+  setTab('va_urma');
+
+  const c = cards().find(x => !x.classList.contains('hidden-tab')) || cards()[0];
+
+  if(c){ c.scrollIntoView({behavior:'smooth',block:'start'}); selectCard(c); }
+
+}
+
+
+
+function selectCard(card){
+
+  activeTip = card;
+
+  document.querySelectorAll('.card.pending').forEach(c => c.style.outline = '');
+
+  card.style.outline = '1px solid rgba(49,230,161,.45)';
+
+  const bar = document.getElementById('bottombar');
+
+  bar.classList.add('show');
+
+  const match = card.querySelector('h2')?.textContent || '';
+
+  document.getElementById('bbMeta').textContent = match;
+
+  recalc(card.querySelector('.stake-in'));
+
+  softRecheck(card);
+
+}
+
+
+
+function setStake(btn, val){
+
+  const card = btn.closest('.card');
+
+  const inp = card.querySelector('.stake-in');
+
+  if(val === 'rec') val = parseFloat(card.dataset.rec || '2');
+
+  inp.value = val;
+
+  card.querySelectorAll('[data-stake-chip]').forEach(c => c.classList.remove('active'));
+
+  btn.classList.add('active');
+
+  recalc(inp);
+
+  selectCard(card);
+
+}
+
+
+
+function setBook(btn, book){
+
+  const card = btn.closest('.card');
+
+  card.dataset.book = book;
+
+  card.querySelectorAll('.book-btn').forEach(b => b.classList.remove('active'));
+
+  btn.classList.add('active');
+
+  selectCard(card);
+
+}
+
+
+
+function recalc(inp){
+
+  if(!inp) return;
+
+  const card = inp.closest('.card');
+
+  const odds = parseFloat(card.dataset.odds);
+
+  const stake = parseFloat(inp.value);
+
+  const ret = (odds > 1 && stake > 0) ? (odds * stake) : null;
+
+  const prof = ret != null ? (ret - stake) : null;
+
+  const pct = (stake > 0) ? (stake / BANK * 100) : null;
+
+  const r = card.querySelector('.ret');
+
+  const p = card.querySelector('.prof');
+
+  const pc = card.querySelector('.pct');
+
+  if(r) r.textContent = ret != null ? ret.toFixed(2) + ' lei' : '—';
+
+  if(p) p.textContent = prof != null ? ((prof>=0?'+':'') + prof.toFixed(2) + ' lei') : '—';
+
+  if(pc) pc.textContent = pct != null ? pct.toFixed(1) + '%' : '—';
+
+}
+
+
+
+async function softRecheck(card){
+
+  const el = card.querySelector('[data-recheck]');
+
+  if(!el) return;
+
+  try{
+
+    const tip = card.dataset.tip;
+
+    const r = await fetch('/api/admin/recheck/' + tip, {method:'POST', credentials:'same-origin',
+
+      headers:{'Content-Type':'application/json','Accept':'application/json'}, body:'{}'});
+
+    const j = await r.json();
+
+    if(j.recheck){
+
+      el.textContent = j.recheck.message_ro || '';
+
+      el.classList.toggle('bad', !!j.recheck.warn);
+
+    }
+
+  }catch(e){ el.textContent = 'Re-check indisponibil'; }
+
+}
+
+
+
+function dests(card){
+
+  const d = [];
+
+  if(card.querySelector('.dest-wa')?.checked) d.push('whatsapp');
+
+  if(card.querySelector('.dest-dc')?.checked) d.push('discord');
+
+  if(card.querySelector('.dest-tg')?.checked) d.push('telegram');
+
+  return d;
+
+}
+
+
+
+function showShare(card, url){
+  if(!card || !url) return;
+  const box = card.querySelector('[data-share]');
+  const inp = card.querySelector('[data-share-url]');
+  if(!box || !inp) return;
+  inp.value = url;
+  box.classList.add('show');
+}
+
+function copyShare(btn){
+  const box = btn.closest('[data-share]');
+  const inp = box && box.querySelector('[data-share-url]');
+  if(!inp || !inp.value) return;
+  const v = inp.value;
+  const done = ()=>{ btn.textContent='Copiat'; setTimeout(()=>btn.textContent='Copiază',1200); };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(v).then(done).catch(()=>{ inp.select(); document.execCommand('copy'); done(); });
+  } else { inp.select(); document.execCommand('copy'); done(); }
+}
+
+async function actPlace(cardEl){
+  const card = cardEl || activeTip || cards()[0];
+  if(!card) return;
+  const tip = card.dataset.tip;
+  const stake = parseFloat(card.querySelector('.stake-in')?.value);
+  const note = card.querySelector('.note')?.value || '';
+  const book = card.dataset.book || 'betano';
+  const btn = document.getElementById('btnPlace');
+  const cardBtns = card.querySelectorAll('.card-actions button');
+  if(btn) btn.disabled = true;
+  cardBtns.forEach(b => b.disabled = true);
+  try{
+    const r = await fetch('/api/admin/confirm/' + tip, {
+      method:'POST', credentials:'same-origin',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body: JSON.stringify({
+        stake_lei: stake,
+        destinations: [],
+        send_to_group: false,
+        do_place: true,
+        personal_note: note,
+        book_pref: book
+      })
+    });
+    const j = await r.json().catch(()=>({}));
+    if(!r.ok || !j.ok){
+      alert(j.message_ro || j.error || ('Eroare ' + r.status));
+      if(btn) btn.disabled = false;
+      cardBtns.forEach(b => b.disabled = false);
+      return;
+    }
+    location.reload();
+  }catch(e){
+    alert('Retea: ' + e);
+    if(btn) btn.disabled = false;
+    cardBtns.forEach(b => b.disabled = false);
+  }
+}
+
+async function actSendGroup(cardEl){
+  const card = cardEl || activeTip || cards()[0];
+  if(!card) return;
+  const tip = card.dataset.tip;
+  const stake = parseFloat(card.querySelector('.stake-in')?.value);
+  const note = card.querySelector('.note')?.value || '';
+  const book = card.dataset.book || 'betano';
+  let d = dests(card);
+  if(!d.length){
+    const wa = card.querySelector('.dest-wa');
+    if(wa) wa.checked = true;
+    d = ['whatsapp'];
+  }
+  const btn = document.getElementById('btnSend');
+  const cardBtns = card.querySelectorAll('.card-actions button');
+  if(btn) btn.disabled = true;
+  cardBtns.forEach(b => b.disabled = true);
+  try{
+    const r = await fetch('/api/admin/confirm/' + tip, {
+      method:'POST', credentials:'same-origin',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body: JSON.stringify({
+        stake_lei: stake,
+        destinations: d,
+        send_to_group: true,
+        do_place: false,
+        personal_note: note,
+        book_pref: book
+      })
+    });
+    const j = await r.json().catch(()=>({}));
+    if(!r.ok || !j.ok){
+      alert(j.message_ro || j.error || ('Eroare ' + r.status));
+      if(btn) btn.disabled = false;
+      cardBtns.forEach(b => b.disabled = false);
+      return;
+    }
+    const pub = j.public_url || j.tip_url || (location.origin + '/tip/' + tip);
+    showShare(card, pub);
+    const ch = (j.destinations || d).join(', ');
+    const msg = (j.message_ro || ('Trimis pe grup (' + ch + ')')) + '\n\nLink public:\n' + pub;
+    alert(msg);
+    setTimeout(()=>location.reload(), 2800);
+  }catch(e){
+    alert('Retea: ' + e);
+    if(btn) btn.disabled = false;
+    cardBtns.forEach(b => b.disabled = false);
+  }
+}
+
+async function actConfirm(){ return actPlace(); }
+
+async function actSkip(){
+
+  const card = activeTip || cards()[0];
+
+  if(!card) return;
+
+  const tip = card.dataset.tip;
+
+  document.getElementById('btnSkip').disabled = true;
+
+  try{
+
+    const r = await fetch('/api/admin/skip/' + tip, {method:'POST', credentials:'same-origin', headers:{'Accept':'application/json'}});
+
+    const j = await r.json().catch(()=>({}));
+
+    if(!r.ok || !j.ok){ alert(j.message_ro || j.error || ('Eroare ' + r.status)); document.getElementById('btnSkip').disabled=false; return; }
+
+    location.reload();
+
+  }catch(e){ alert('Retea: ' + e); document.getElementById('btnSkip').disabled=false; }
+
+}
+
+
+
+async function skipAllExpired(){
+
+  try{
+
+    const r = await fetch('/api/admin/skip_expired', {method:'POST', credentials:'same-origin', headers:{'Accept':'application/json'}});
+
+    const j = await r.json().catch(()=>({}));
+
+    alert(j.message_ro || (j.ok ? 'OK' : 'Eroare'));
+
+    if(j.ok) location.reload();
+
+  }catch(e){ alert('Retea: ' + e); }
+
+}
+
+
+
+
+async function actCashout(tipId, stakeMarker, ticketId){
+  if(!confirm('Pune job de cashout Betano pentru acest bilet? (box worker executa)')) return;
+  try{
+    const r = await fetch('/api/admin/betano/cashout', {
+      method:'POST', credentials:'same-origin',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body: JSON.stringify({ tip_id: tipId, stake_marker: stakeMarker, ticket_id: ticketId || undefined })
+    });
+    const j = await r.json().catch(()=>({}));
+    if(!r.ok || !j.ok){ alert(j.message_ro || j.error || ('Eroare ' + r.status)); return; }
+    alert(j.message_ro || ('Cashout job: ' + (j.job_id || 'ok')));
+  }catch(e){ alert('Retea: ' + e); }
+}
+
+async function actCashoutOpen(stakeMarker, ticketId){
+  if(!confirm('Cashout pe Betano pentru miza/marker ' + stakeMarker + '?')) return;
+  try{
+    const r = await fetch('/api/admin/betano/cashout', {
+      method:'POST', credentials:'same-origin',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body: JSON.stringify({ stake_marker: stakeMarker, ticket_id: ticketId || undefined })
+    });
+    const j = await r.json().catch(()=>({}));
+    if(!r.ok || !j.ok){ alert(j.message_ro || j.error || ('Eroare ' + r.status)); return; }
+    alert(j.message_ro || ('Cashout job: ' + (j.job_id || 'ok')));
+  }catch(e){ alert('Retea: ' + e); }
+}
+
+async function toggleHalt(){
+
+  const r = await fetch('/api/admin/halt', {method:'POST', credentials:'same-origin',
+
+    headers:{'Content-Type':'application/json','Accept':'application/json'}, body:'{}'});
+
+  const j = await r.json().catch(()=>({}));
+
+  if(j.ok) location.reload();
+
+  else alert('Nu am putut comuta kill switch');
+
+}
+
+
+
+// init
+
+cards().forEach(c => {
+
+  recalc(c.querySelector('.stake-in'));
+
+  c.addEventListener('click', (e) => {
+
+    if(e.target.closest('a,button,input,textarea,label,summary')) return;
+
+    selectCard(c);
+
+  });
+
+  const st = parseFloat(c.dataset.stake);
+
+  const chip = [...c.querySelectorAll('[data-stake-chip]')].find(x => parseFloat(x.dataset.stakeChip) === st);
+
+  if(chip) chip.classList.add('active');
+
+});
+
+setTab(currentTab);
+
+if(currentTab === 'va_urma' && cards().length){
+
+  document.getElementById('bottombar').classList.add('show');
+
+  selectCard(cards()[0]);
+
+}
+
+</script>
+
+{% endif %}
+
+</body>
+
+</html>
+

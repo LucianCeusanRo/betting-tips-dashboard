@@ -1,0 +1,22 @@
+{
+  "ts": "2026-01-01T18:00:00+02:00",
+  "sources": {"betano": {"ok": true, "count": 1}, "superbet": {"ok": true, "count": 1}},
+  "errors": {},
+  "matches": [
+    {
+      "id": "demo-1",
+      "sport": "cs2",
+      "league": "Demo League",
+      "score": "0-0",
+      "teams": ["Team Alpha", "Team Beta"],
+      "books": {
+        "betano":   {"url": "https://example.com/betano/demo-1",
+                     "markets": {"match_winner": {"name": "Match winner", "selections": [
+                       {"name": "Team Alpha", "price": 1.95}, {"name": "Team Beta", "price": 1.90}]}}},
+        "superbet": {"url": "https://example.com/superbet/demo-1",
+                     "markets": {"match_winner": {"name": "Match winner", "selections": [
+                       {"name": "Team Alpha", "price": 1.70}, {"name": "Team Beta", "price": 2.15}]}}}
+      }
+    }
+  ]
+}
