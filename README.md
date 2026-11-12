@@ -6,6 +6,7 @@
 
 **Local odds line-shopping with honest math, tiny capped stakes and a human in the loop.**
 
+  <a href="https://github.com/LucianCeusanRo/betting-tips-dashboard/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/LucianCeusanRo/betting-tips-dashboard/actions/workflows/ci.yml/badge.svg"></a>
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-green.svg"></a>
   <img alt="Python 3.11+" src="https://img.shields.io/badge/language-Python%203.11%2B-blue">
   <a href="https://github.com/LucianCeusanRo/betting-tips-dashboard/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/LucianCeusanRo/betting-tips-dashboard?style=flat"></a>
